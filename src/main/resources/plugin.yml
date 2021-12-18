@@ -1,0 +1,8 @@
+name: Handcuffs
+main: me.NerdsWBNerds.Handcuffs.Handcuffs
+version: 2.0
+authors: [ NerdsWBNerds, MarcusSlover ]
+commands:
+  hc:
+    description: Instead of using tools use commands.
+    usage: /hc [carry|cuff|free] [name]

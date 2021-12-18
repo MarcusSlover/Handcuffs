@@ -1,0 +1,75 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.0'
+}
+
+group 'me.NerdsWBNerds'
+version '2.0'
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories {
+    mavenCentral()
+
+    maven {url 'https://m2.tecc.me/snapshots'}
+    maven {url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots'}
+    maven {url "https://repo.dmulloy2.net/repository/public/"}
+}
+
+configurations {
+    provided
+    compileOnly.extendsFrom(provided)
+    testImplementation.extendsFrom(provided)
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+    provided 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'org.jetbrains:annotations:22.0.0'
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+processResources {
+    outputs.upToDateWhen { false }
+    expand(project: project)
+}
+
+compileJava {
+    options.compilerArgs = List.of('-Xlint')
+}
+
+test {
+    useJUnitPlatform()
+}
+
+def relocatePkg(String... packages) {
+    for (String p : packages) {
+        shadowJar.relocate p, "me.marcusslover.handcuffs.internal.${p}"
+    }
+}
+
+shadowJar {
+    configurations = [project.configurations.runtimeClasspath]
+}
+relocatePkg 'com.google.gson', 'com.google.common', 'org.apache.commons.lang3'
+
+task moveToLatest(type: Copy) {
+    dependsOn shadowJar
+    from shadowJar.archiveFile
+    rename "Handcuffs-${version}(-all)?.jar", "Handcuffs-latest\$1.jar"
+    into jar.destinationDirectory.getAsFile()
+}
+
+build.dependsOn shadowJar
+build.dependsOn moveToLatest

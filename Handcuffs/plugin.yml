@@ -1,7 +1,0 @@
-name: Handcuffs
-main: me.NerdsWBNerds.Handcuffs.Handcuffs
-version: 1.2
-commands:
-   hc:
-      description: Instead of using tools use commands.
-      usage: /hc [carry|cuff|free] [name]
