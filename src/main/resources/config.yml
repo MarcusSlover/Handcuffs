@@ -1,0 +1,11 @@
+cuffID: STRING
+keyID: SHEARS
+cuffAmount: 7
+cuffTake: true
+keyTake: false
+nerfDamage: true
+burnCuffs: true
+canPickup: false
+canChangeInv: false
+reqOp: false
+usePerms: false
